@@ -6,12 +6,14 @@
 .. |episode_example| image:: ./img/grid2op_action.jpg
 
 ===============================================
-Welcome to Grid2Op's technical documentation!
+Grid2Op_Resilience
 ===============================================
 
-Grid2Op is a pythonic, easy to use framework, to be able to develop, train or evaluate performances of "agent" or
-"controller" that acts on a powergrid in  different ways.
-
+Grid2Op_Resilience is an adaptation of the Grid2Op_ framework to accomodate resilience powergrid simulation / reinforcement 
+learning. This documentation only lists the differences of Grid2Op_Resilience compared to its original version. If a function
+ or class is not described here, then it is a copy from Grid2Op. Please 
+ check the documentation for Grid2Op_. 
+.._Grid2Op: https://grid2op.readthedocs.io/en/latest/index.html
 It is modular and can be use to train reinforcement learning agent or to assess the performance of optimal control
 algorithm.
 
