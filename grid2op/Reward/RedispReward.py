@@ -161,7 +161,6 @@ class RedispReward(BaseReward):
                 res = self.reward_min
         elif is_illegal or is_ambiguous:
             res = self._reward_illegal_ambiguous
-
         if res is None:
             # compute the losses
             gen_p, *_ = env.backend.generators_info()
@@ -170,6 +169,9 @@ class RedispReward(BaseReward):
 
             # compute the marginal cost
             gen_activeprod_t = env._gen_activeprod_t
+            # print(gen_activeprod_t)
+            # print(gen_activeprod_t > 0.)
+
             marginal_cost = np.max(env.gen_cost_per_MW[gen_activeprod_t > 0.])
 
             # redispatching amount

@@ -759,6 +759,11 @@ class GridObjects:
 
         if self._vectorized is None:
             self._raise_error_attr_list_none()
+            li_vect = []
+            # for el in self.attr_list_vect:
+            #     li_vect.append(self._get_array_from_attr_name(el).astype(dt_float))
+            #     if np.isnan(self._get_array_from_attr_name(el).astype(dt_float)).any():
+            #         print('NaN value at {}'.format(el))
             li_vect = [self._get_array_from_attr_name(el).astype(dt_float) for el in self.attr_list_vect]
             if li_vect:
                 self._vectorized = np.concatenate(li_vect)

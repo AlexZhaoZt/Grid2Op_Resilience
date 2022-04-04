@@ -1,15 +1,16 @@
 from grid2op.Action import TopologyAndDispatchAction
-from grid2op.Reward import RedispReward
+from grid2op.Reward import RedispReward, ResilienceReward
 from grid2op.Rules import DefaultRules
 from grid2op.Chronics import Multifolder
 from grid2op.Chronics import GridStateFromFileWithForecasts
-from grid2op.Backend import PandaPowerBackend
+from grid2op.Backend import PandaPowerBackend, ResilienceBackend
 
 config = {
     "backend": PandaPowerBackend,
     "action_class": TopologyAndDispatchAction,
     "observation_class": None,
     "reward_class": RedispReward,
+    # "reward_class": ResilienceReward,
     "gamerules_class": DefaultRules,
     "chronics_class": Multifolder,
     "grid_value_class": GridStateFromFileWithForecasts,

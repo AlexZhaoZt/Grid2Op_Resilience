@@ -15,6 +15,7 @@ import numpy as np
 from scipy.optimize import minimize
 from scipy.optimize import LinearConstraint
 from abc import ABC, abstractmethod
+from copy import deepcopy
 
 from grid2op.dtypes import dt_int, dt_float, dt_bool
 from grid2op.Space import GridObjects, RandomObject
@@ -318,6 +319,8 @@ class BaseEnv(GridObjects, RandomObject, ABC):
 
         self._thermal_limit_a = thermal_limit_a
         self._disc_lines = None
+        self._new_p = None
+        self._new_load = None
 
         # store environment modifications
         self._injection = None
@@ -1780,6 +1783,26 @@ class BaseEnv(GridObjects, RandomObject, ABC):
         max_total_up = np.sum(th_max - new_p[self.gen_redispatchable])
         max_total_down = np.sum(th_min - new_p[self.gen_redispatchable])  # TODO is that it ?
         return max_total_down, max_total_up
+    def _p_difference(self):    
+        """
+        calculate the generator output difference between scheduled and actual
+        call this function after self.step()
+        """
+        actual_p = self.current_obs.gen_p
+        schedule_p = self._new_p
+        difference_p = actual_p - schedule_p
+        abs_diff_p = np.absolute(difference_p)
+
+        return abs_diff_p
+    def _load_difference(self):
+        """the same usage as _p_difference"""
+        if self._new_load is None:
+            return 0
+        else:
+            schedule_load = self._new_load
+            actual_load = self.current_obs.load_p
+            diff_load = actual_load - schedule_load
+            return diff_load
 
     def step(self, action):
         """
@@ -1928,6 +1951,11 @@ class BaseEnv(GridObjects, RandomObject, ABC):
             self._env_modification._single_act = False  # because it absorbs all redispatching actions
             new_p = self._get_new_prod_setpoint(action)
             max_total_down, max_total_up = None, None
+            if self._injection:
+                self._new_load = self._injection["load_p"]
+            else:
+                self._new_load = None
+            self._new_p = new_p
 
             # curtailment
             self._gen_before_curtailment[self.gen_renewable] = new_p[self.gen_renewable]
@@ -2048,7 +2076,7 @@ class BaseEnv(GridObjects, RandomObject, ABC):
             attack, attack_duration = self._oppSpace.attack(observation=self.current_obs,
                                                             agent_action=action,
                                                             env_action=self._env_modification)
-
+            # attack = action.set_line_status = ([(4, -1)])
             if attack is not None:
                 # the opponent choose to attack
                 # i update the "cooldown" on these things
@@ -2059,8 +2087,18 @@ class BaseEnv(GridObjects, RandomObject, ABC):
                                 np.maximum(attack_duration, self._times_before_topology_actionable[subs_attacked])
                 self._backend_action += attack
             self._time_opponent += time.time() - tick
-            self.backend.apply_action(self._backend_action)
 
+            '''special feature in resilience'''
+            if self.env_name == 'rte_case14_realistic' and self.glop_version == '1.6.3+resilience':
+                if self.current_obs is not None and self.current_obs.current_step == 1:
+                    act = self.action_space()
+                    line = np.full((self.n_line), False, dtype=bool)
+                    act.set_line_status = ([(3, -1), (5, -1), (16, -1), (4, -1), (7, -1)])
+                    line[3] = line[4] = line[5] = line[7] = line[16] = True
+                    self._times_before_line_status_actionable[lines_attacked] = 12
+                    self._backend_action += act
+
+            self.backend.apply_action(self._backend_action)
             self._time_apply_act += time.time() - beg_
             try:
                 # compute the next _grid state

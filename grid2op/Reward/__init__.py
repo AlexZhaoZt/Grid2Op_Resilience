@@ -17,11 +17,21 @@ __all__ = [
     "BaseReward",
     "EpisodeDurationReward",
     "AlarmReward",
+    "ResilienceReward",
+    "UnsuppliedLoadMetric",
+    "GridIntegrityMetric",
+    "ResponseQualityMetric",
+    "CostMetric",
+    "SMAACReward",
+    "GenDiffMetric",
+    "ActionRecorder",
+    "StateRecorder",
     "_AlarmScore",
     # TODO it would be better to have a specific package for this, but in the mean time i put it here
     "L2RPNSandBoxScore"
 ]
 
+from sympy import im
 from grid2op.Reward.ConstantReward import ConstantReward
 from grid2op.Reward.EconomicReward import EconomicReward
 from grid2op.Reward.FlatReward import FlatReward
@@ -41,8 +51,16 @@ from grid2op.Reward.BaseReward import BaseReward
 from grid2op.Reward.L2RPNSandBoxScore import L2RPNSandBoxScore
 from grid2op.Reward.EpisodeDurationReward import EpisodeDurationReward
 from grid2op.Reward.AlarmReward import AlarmReward
+from grid2op.Reward.ResilienceReward import ResilienceReward
 from grid2op.Reward._AlarmScore import _AlarmScore
-
+from grid2op.Reward.UnsuppliedLoadMetric import UnsuppliedLoadMetric
+from grid2op.Reward.CostMetric import CostMetric
+from grid2op.Reward.GridIntegrityMetric import GridIntegrityMetric
+from grid2op.Reward.ResponseQualityMetric import ResponseQualityMetric
+from grid2op.Reward.SMAACReward import SMAACReward
+from grid2op.Reward.GenDiffMetric import GenDiffMetric
+from grid2op.Reward.ActionRecorder import ActionRecorder
+from grid2op.Reward.StateRecorder import StateRecorder
 import warnings
 
 

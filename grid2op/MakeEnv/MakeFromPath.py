@@ -389,7 +389,6 @@ def make_from_dataset_path(dataset_path="/",
     action_class = _get_default_aux("action_class", kwargs, defaultClass=action_class_cfg,
                                     defaultClassApp=BaseAction, msg_error=ERR_MSG_KWARGS["action_class"],
                                     isclass=True)
-
     # Get default Voltage class
     voltage_class_cfg = ControlVoltageFromFile
     if "voltage_class" in config_data and config_data["voltage_class"] is not None:
