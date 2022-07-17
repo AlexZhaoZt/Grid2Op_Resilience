@@ -2088,15 +2088,15 @@ class BaseEnv(GridObjects, RandomObject, ABC):
                 self._backend_action += attack
             self._time_opponent += time.time() - tick
 
-            '''special feature in resilience'''
-            if self.env_name == 'rte_case14_realistic' and self.glop_version == '1.6.3+resilience':
-                if self.current_obs is not None and self.current_obs.current_step == 1:
-                    act = self.action_space()
-                    line = np.full((self.n_line), False, dtype=bool)
-                    act.set_line_status = ([(3, -1), (5, -1), (16, -1), (4, -1), (7, -1)])
-                    line[3] = line[4] = line[5] = line[7] = line[16] = True
-                    self._times_before_line_status_actionable[lines_attacked] = 12
-                    self._backend_action += act
+            # '''special feature in resilience'''
+            # if self.env_name == 'rte_case14_realistic' and self.glop_version == '1.6.3+resilience':
+            #     if self.current_obs is not None and self.current_obs.current_step == 1:
+            #         act = self.action_space()
+            #         line = np.full((self.n_line), False, dtype=bool)
+            #         act.set_line_status = ([(3, -1), (5, -1), (16, -1), (4, -1), (7, -1)])
+            #         line[3] = line[4] = line[5] = line[7] = line[16] = True
+            #         self._times_before_line_status_actionable[lines_attacked] = 12
+            #         self._backend_action += act
 
             self.backend.apply_action(self._backend_action)
             self._time_apply_act += time.time() - beg_

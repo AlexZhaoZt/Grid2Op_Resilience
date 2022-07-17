@@ -101,7 +101,7 @@ class ContingencyOpponent(BaseOpponent):
         Returns
         -------
         attack: :class:`grid2op.Action.Action`
-            The attack performed by the opponent. In this case, a do nothing, all the time.
+            The attack performed by the opponent. 
 
         duration: ``int``
             The duration of the attack (if ``None`` then the attack will be made for the longest allowed time)
@@ -119,6 +119,13 @@ class ContingencyOpponent(BaseOpponent):
         if np.all(~status):
             return None, 0  # i choose not to attack in this case
 
-        # Pick a line among the connected lines
-        attack = self.space_prng.choice(self._attacks[status])
+        # randomly select the number of lines to be disconnected
+        attack_or_not = self.space_prng.rand() > 0.8
+        if attack_or_not:
+            num_line_discs = self.space_prng.randint(1, 4)
+            # Pick a line among the connected lines
+            attack_ids = self.space_prng.choice(np.arange(len(self._lines_ids)), num_line_discs, replace=False)
+            attack = self.action_space({'set_line_status': [(l_id, -1) for l_id in attack_ids]})
+        else:
+            attack = None
         return attack, None

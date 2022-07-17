@@ -168,7 +168,7 @@ class OpponentSpace(object):
         if self.current_attack_duration > 0:
             # previous attack is not over
             attack = self.last_attack
-
+        
         elif self.current_attack_cooldown > self.attack_cooldown:
             # minimum time between two consecutive attack not met
             attack = None

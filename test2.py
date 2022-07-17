@@ -16,9 +16,9 @@ from grid2op.Parameters import Parameters
 p = Parameters()
 p.ENV_DC = True
 # env = grid2op.make("rte_case14_realistic", action_class=grid2op.Action.CompleteAction, param=p)
-env = grid2op.make("rte_case14_realistic", param=p)
+# env = grid2op.make("rte_case14_realistic", param=p)
 # env = grid2op.make("rte_case5_example", test=True, param=p)
-# env = grid2op.make("rte_case14_opponent", test=True, param=p)
+env = grid2op.make("rte_case14_opponent", param=p)
 # %%
 # plot grid
 line_ids = [int(i) for i in range(env.n_line)]
@@ -111,8 +111,7 @@ def termination_test():
     obs_arr.append(obs)
     fig = plot_helper.plot_obs(obs_arr[-1])
     print(info)
-
-def do_nothing_test():
+    
     act = env.action_space()
 
     for _ in range(10):
@@ -120,6 +119,17 @@ def do_nothing_test():
         print(info)
         obs_arr.append(obs)
         fig = plot_helper.plot_obs(obs_arr[-1])
+
+def do_nothing_test():
+    act = env.action_space()
+
+    for i in range(100):
+        obs, _, _, info = env.step(act)
+        if info['opponent_attack_line'] is not None:
+            print("Step {}, Opponent attacked lines: {}".format(i, env.action_space().name_line[info['opponent_attack_line']]))
+        obs_arr.append(obs)
+        fig = plot_helper.plot_obs(obs_arr[-1])
+        fig.savefig("test_figures/step{}.png".format(i))
 
 def busbar_test():
 
@@ -221,7 +231,7 @@ def off_line_test():
     print(info)
 # busbar_test()
 
-termination_test()
-# do_nothing_test()
+# termination_test()
+do_nothing_test()
 # off_line_test()
 # %%

@@ -105,15 +105,24 @@ class EssentialObservation(BaseObservation):
             [``bool``]
 
     """
+    # attr_list_vect = [
+    #     "gen_p",
+    #     "load_p",
+    #     "p_or", "a_or",
+    #     "p_ex", "a_ex",
+    #     "rho",
+    #     "line_status", "timestep_overflow",
+    #     "topo_vect",
+    #     "time_before_cooldown_line", "time_before_cooldown_sub",
+    # ]
     attr_list_vect = [
         "gen_p",
         "load_p",
-        "p_or", "a_or",
-        "p_ex", "a_ex",
+        "p_or",
+        "p_ex",
         "rho",
         "line_status", "timestep_overflow",
         "topo_vect",
-        "time_before_cooldown_line", "time_before_cooldown_sub",
     ]
     attr_list_json = ["_thermal_limit",
                       "support_theta",
