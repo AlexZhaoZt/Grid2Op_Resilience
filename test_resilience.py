@@ -6,7 +6,6 @@ import numpy as np
 import grid2op
 print('Running Grid2Op with version:')
 print(grid2op.__version__)
-from tqdm.notebook import tqdm  # for easy progress bar
 display_tqdm = False  # this is set to False for ease with the unitt test, feel free to set it to True
 from grid2op.PlotGrid import PlotMatplot
 from grid2op.Agent import DoNothingAgent
@@ -15,18 +14,12 @@ from grid2op.Parameters import Parameters
 # initialize
 p = Parameters()
 p.ENV_DC = True
-# env = grid2op.make("rte_case14_realistic", action_class=grid2op.Action.CompleteAction, param=p)
-# env = grid2op.make("rte_case14_realistic", param=p)
-# env = grid2op.make("rte_case5_example", test=True, param=p)
 env = grid2op.make("rte_case14_opponent", param=p)
 # %%
 # plot grid
 line_ids = [int(i) for i in range(env.n_line)]
 plot_helper = PlotMatplot(env.observation_space)
-# plot_helper.plot_info(gen_values=env.gen_pmax)
 plot_helper.plot_info(line_values=env.action_space().name_line)
-# plot_helper.plot_info(load_values=[el for el in range(env.n_load)])
-# plot_helper.plot_layout()
 # %%
 # plot_helper.plot_info(load_values=[el for el in range(env.n_load)])
 plot_helper.plot_info(gen_values=env.gen_pmax)

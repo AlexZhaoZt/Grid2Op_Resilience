@@ -45,15 +45,7 @@ class ResilienceBackend(Backend):
         from this class. Note However that implies knowing the behaviour
         of PandaPower.
 
-    This module presents an example of an implementation of a `grid2op.Backend` when using the powerflow
-    implementation "pandapower" available at `PandaPower <https://www.pandapower.org/>`_ for more details about
-    this backend. This file is provided as an example of a proper :class:`grid2op.Backend.Backend` implementation.
-
-    This backend currently does not work with 3 winding transformers and other exotic object.
-
-    As explained in the `grid2op.Backend` module, every module must inherit the `grid2op.Backend` class.
-
-    This class have more attributes that are used internally for faster information retrieval.
+    Backend that implements the resilience rule, i.e. allows for continued grid simulation after it "fails" by disconnenction of components. Supports manuanlly designating N-k contingency.
 
     Attributes
     ----------
@@ -93,10 +85,6 @@ class ResilienceBackend(Backend):
     v_ex: :class:`numpy.array`, dtype:float
         The voltage magnitude at the extremity bus of the powerline
 
-    Examples
-    ---------
-    The only recommended way to use this class is by passing an instance of a Backend into the "make"
-    function of grid2op. Do not attempt to use a backend outside of this specific usage.
 
     .. code-block:: python
 
@@ -1231,13 +1219,11 @@ class ResilienceBackend(Backend):
         return bus_id
 
     def check_resilience_conditions(self):
+        """checks resilience contingency conditions and raises an exception if condition is violated.
+
+        Raises:
+            pp.powerflow.LoadflowNotConverged
+        """
         if self.get_num_islands()  > self.max_islands:
             # contingency security violated. throws exception
             raise pp.powerflow.LoadflowNotConverged("More islands or isolated buses than allowed! Maximum is {}, but there are at least {} islands or isolated buses. ".format(self.max_islands, self.get_num_islands()))
-
-        # # if self._grid.num_islands > self.max_islands: #CHANGED
-        # if self._grid.num_islands + len(self._grid._isolated_buses) - self.get_nb_active_bus() > self.max_islands \
-        #     or self._grid.num_islands + self._grid.num_out_of_service > self.max_islands:
-        #     # maximum islands violated. throws exception
-        #     raise pp.powerflow.LoadflowNotConverged("More islands than allowed! Maximum is {}, but there are {} islands. ".format(self.max_islands, self._grid.num_islands))
-
